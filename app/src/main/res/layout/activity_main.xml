@@ -1,18 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activity.SplashActivity">
+    <!--第一部分搜索条 -->
+    <RelativeLayout
+        android:background="#9E9D42"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"></RelativeLayout>
+    <!--第二部分切换内容 -->
+    <FrameLayout
+        android:id="@+id/content"
+        android:layout_weight="1"
+        android:background="#FFFFFF"
+        android:layout_width="match_parent"
+        android:layout_height="0dp">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="main"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-</android.support.constraint.ConstraintLayout>
+    </FrameLayout>
+    <!--第三部分底部选项卡 -->
+    <LinearLayout
+        android:background="#F8F8F8"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+        <RadioGroup  android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:id="@+id/radio_group"
+            android:checkedButton="@+id/rb1"
+            android:layout_height="match_parent">
+        <RadioButton
+            style="@style/MainRadioButton"
+            android:id="@+id/rb1"
+            android:drawableTop="@drawable/selector_main_r1"
+            android:text="选项一"
+          />
+        <RadioButton
+            android:id="@+id/rb2"
+            android:text="选项二"
+            android:drawableTop="@drawable/selector_main_r2"
+            style="@style/MainRadioButton" />
+        <ImageView
+            android:src="@mipmap/asq"
+            style="@style/MainRadioButton"/>
+        <RadioButton
+            android:id="@+id/rb3"
+            android:text="选项四"
+            android:drawableTop="@drawable/selector_main_r3"
+            style="@style/MainRadioButton" />
+        <RadioButton
+            android:id="@+id/rb4"
+            android:text="选项五"
+            android:drawableTop="@drawable/selector_main_r4"
+            style="@style/MainRadioButton"  />
+        </RadioGroup>
+    </LinearLayout>
+</LinearLayout>
