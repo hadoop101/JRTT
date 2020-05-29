@@ -5,8 +5,11 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 import com.xugong.jrtt.R;
@@ -23,6 +26,25 @@ public class SplashActivity extends AppCompatActivity {
         startPlayVideo();
         //4,跳转功能
         listenJumpBtn();
+        //5,将画面设置成屏幕大小
+        setVideoSize();
+
+    }
+
+    //5,
+    private void setVideoSize() {
+        //5.1 攻取屏幕尺寸对象
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+        //5.2 创建布局参数
+        RelativeLayout.LayoutParams params=new RelativeLayout.LayoutParams(metrics.widthPixels,metrics.heightPixels);
+        //5.3 设置给VideoView
+        videoView.setLayoutParams(params);
+        //低版本模拟器上添加
+        params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+        params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+
     }
 
     //4.3
@@ -43,11 +65,12 @@ public class SplashActivity extends AppCompatActivity {
         });
     }
 
+    private VideoView videoView;
     private void startPlayVideo() {
         //播放地址
         Uri uri= Uri.parse("android.resource://"+getPackageName()+"/"+R.raw.video);
         //调用VideoView来播放
-        VideoView videoView=findViewById(R.id.videoview);
+         videoView=findViewById(R.id.videoview);
         videoView.setVideoURI(uri);
         videoView.start();
 
