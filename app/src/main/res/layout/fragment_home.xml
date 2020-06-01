@@ -5,9 +5,18 @@ xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
 tools:context=".activity.SplashActivity">
-<android.support.v4.view.ViewPager
-    android:id="@+id/viewpager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-</android.support.v4.view.ViewPager>
+    <!--app:tabMode="scrollable" 如果标题过多，滑动 -->
+    <android.support.design.widget.TabLayout
+        android:id="@+id/tablayout"
+        app:tabMode="scrollable"
+        app:tabTextColor="#242424"
+        app:tabSelectedTextColor="#F04445"
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
+    </android.support.design.widget.TabLayout>
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </android.support.v4.view.ViewPager>
 </LinearLayout>
