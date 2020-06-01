@@ -1,5 +1,6 @@
 package xugong.com.test01adapter;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,66 +9,27 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.joanzapata.android.BaseAdapterHelper;
+import com.joanzapata.android.QuickAdapter;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    class MyAdapter extends BaseAdapter{
-        @Override
-        public int getCount() {
-            return list.size();//1000
-        }
+   class MyAdapter extends QuickAdapter<String>{
 
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
+       public MyAdapter(Context context, int layoutResId, List<String> data) {
+           super(context, layoutResId, data);
+       }
 
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        class ViewHolder{
-            TextView textView;
-        }
-        //convertView视图回收器返回的视图
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            //取数据
-            String data = list.get(position);
-            ViewHolder holder =null;
-            //准备视图
-            if(convertView==null){
-                System.out.println("getView: convertView==null");
-                //将视图文件加载到内存中，创建视图对象  第一次初始化视图
-                convertView= View.inflate(MainActivity.this,R.layout.item,null);//参1，上下文，参2，布局，参3 null
-
-                TextView textView=convertView.findViewById(R.id.textview);
-
-                holder=new ViewHolder();
-
-                holder.textView=textView;
-                //将viewHolder与视图绑定
-                convertView.setTag(holder);
-
-            }else{//convertView!=null 视图回收器返回旧视图
-                //每次显示一个数据的话，就创建一个视图
-                System.out.println("getView方法:"+convertView);
-                holder= (ViewHolder) convertView.getTag();
-
-            }
-
-            //赋值
-            holder.textView.setText(data);
-            return convertView;
-
-        }
-        //getCount()
-        //getView()
-
-    }
+       @Override
+       protected void convert(BaseAdapterHelper helper, String item) {//参1，处理 viewholder 参2 表示列表中数据
+           //取数据
+           //将数据赋值给视图
+           helper.setText(R.id.textview,item);//参1，视图中的viewId 参2，数据
+       }
+   }
     private List<String> list;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         ListView listView=findViewById(R.id.listview);
 
         //3,重创建适配器
-        MyAdapter myAdapter=new MyAdapter();
+        MyAdapter myAdapter=new MyAdapter(MainActivity.this,R.layout.item,list);
         listView.setAdapter(myAdapter);
 
     }
