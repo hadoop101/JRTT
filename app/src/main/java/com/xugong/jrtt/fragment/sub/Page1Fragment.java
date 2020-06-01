@@ -29,7 +29,7 @@ public class Page1Fragment extends Fragment {
             }
 
             System.out.println("onCreateView----------------");
-            return view;
+            return view;//--ViewPager  addView()
 
     }
 

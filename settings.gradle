@@ -1,1 +1,1 @@
-include ':app', ':test01adapter'
+include ':app', ':test01adapter', ':test02parent'
