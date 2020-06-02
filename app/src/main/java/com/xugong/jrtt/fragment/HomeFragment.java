@@ -10,17 +10,9 @@ import android.view.View;
 
 import com.google.gson.Gson;
 import com.xugong.jrtt.R;
-import com.xugong.jrtt.bean.NewTypeData;
 import com.xugong.jrtt.bean.ResponseData;
 import com.xugong.jrtt.fragment.sub.Page1Fragment;
-import com.xugong.jrtt.fragment.sub.Page2Fragment;
-import com.xugong.jrtt.fragment.sub.Page3Fragment;
-import com.xugong.jrtt.fragment.sub.Page4Fragment;
 import com.xugong.jrtt.net.MyApi;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,58 +25,56 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 //二级页面
 public class HomeFragment extends BaseFragment {
-    //3,定义了适配器
-    class MyPagerAdapter extends FragmentPagerAdapter{
-        private List<Fragment> pages=new ArrayList<>();
-        private List<String> titles=new ArrayList<>();
-        public MyPagerAdapter(FragmentManager fm) {
+
+    private ViewPager viewPager;
+    private TabLayout tablayout;
+    public View getMyView() {
+        //1,布局ViewPager
+        //2,加载
+        View view=View.inflate(getActivity(), R.layout.fragment_home,null);
+         viewPager=view.findViewById(R.id.viewpager);
+         tablayout = view.findViewById(R.id.tablayout);
+        //getData()
+        getData();
+        //4,适配器
+
+
+        return view;
+    }
+
+
+    class MyNewTypeAdapter extends  FragmentPagerAdapter{
+
+        //集合可以让我们重用Fragment
+        private List<ResponseData.DataBean> datas=new ArrayList<>();
+        private List<Fragment> fragments=new ArrayList<>();
+
+        public MyNewTypeAdapter(FragmentManager fm,List<ResponseData.DataBean> list) {
             super(fm);
-            pages.add(new Page1Fragment());//0
-            pages.add(new Page2Fragment());//1
-            pages.add(new Page3Fragment());//2
-            pages.add(new Page4Fragment());//3
-            titles.add("Page1Fragment");
-            titles.add("Page2Fragment");
-            titles.add("Page3Fragment");
-            titles.add("Page4Fragment");
-        }
 
-        @Override
-        public Fragment getItem(int i) {//返回页面内容
-            return pages.get(i);//
-        }
+            datas.addAll(list);//将一个集合中所有的数据加到当前的datas
 
-        @Override
-        public int getCount() {//返回页面的数量
-            return pages.size();
+            for(ResponseData.DataBean item:datas){
+                fragments.add(new Page1Fragment());
+            }
         }
 
         @Nullable
         @Override
         public CharSequence getPageTitle(int position) {
-            return titles.get(position);
+            return datas.get(position).title;//将标题返回
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return fragments.get(i);
+        }
+
+        @Override
+        public int getCount() {
+            return datas.size();
         }
     }
-
-
-    public View getMyView() {
-        //1,布局ViewPager
-        //2,加载
-        View view=View.inflate(getActivity(), R.layout.fragment_home,null);
-        ViewPager viewPager=view.findViewById(R.id.viewpager);
-
-        //getData()
-        getData();
-        //4,适配器
-        MyPagerAdapter myPager=new MyPagerAdapter(getFragmentManager());
-        viewPager.setAdapter(myPager);
-        //5,初始指示器
-        TabLayout tablayout = view.findViewById(R.id.tablayout);
-        tablayout.setupWithViewPager(viewPager);//->viewpager-->adapter->getPageTitle
-        return view;
-    }
-
-    private List<NewTypeData> datas=new ArrayList<>();
     private void getData() {
         //1:retrofit
         Retrofit retrofit = new Retrofit.Builder()//创建器
@@ -101,6 +91,11 @@ public class HomeFragment extends BaseFragment {
                 ResponseData data = response.body();
                 System.out.println(data.data);
                 System.out.println(data.retcode);
+
+                //----------------
+                MyNewTypeAdapter adapter=new MyNewTypeAdapter(getFragmentManager(),data.data);
+                viewPager.setAdapter(adapter);
+                tablayout.setupWithViewPager(viewPager);//->viewpager-->adapter->getPageTitle
 
             }
 
