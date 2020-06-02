@@ -11,21 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class UserFragment extends Fragment {
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = getMyView();
-            return view;
+public class UserFragment extends BaseFragment {
 
-    }
-
-    private View getMyView() {
-        TextView textView= new TextView(getActivity());
-        textView.setBackgroundColor(Color.BLUE);
-        textView.setText("UserFragment");
-        textView.setTextSize(22);
-        textView.setGravity(Gravity.CENTER);
-        return textView;
-    }
 }
+

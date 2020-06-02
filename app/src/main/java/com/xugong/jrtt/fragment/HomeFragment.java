@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 //二级页面
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseFragment {
     //3,定义了适配器
     class MyPagerAdapter extends FragmentPagerAdapter{
         private List<Fragment> pages=new ArrayList<>();
@@ -58,15 +58,9 @@ public class HomeFragment extends Fragment {
             return titles.get(position);
         }
     }
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = getMyView();
-            return view;
 
-    }
 
-    private View getMyView() {
+    public View getMyView() {
         //1,布局ViewPager
         //2,加载
         View view=View.inflate(getActivity(), R.layout.fragment_home,null);

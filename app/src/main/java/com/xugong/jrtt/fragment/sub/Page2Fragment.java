@@ -11,21 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class Page2Fragment extends Fragment {
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-            View view = getMyView();
-            return view;
+import com.xugong.jrtt.fragment.BaseFragment;
 
-    }
+public class Page2Fragment extends BaseFragment {
 
-    private View getMyView() {
-        TextView textView= new TextView(getActivity());
-        textView.setBackgroundColor(Color.GREEN);
-        textView.setText("P2");
-        textView.setTextSize(22);
-        textView.setGravity(Gravity.CENTER);
-        return textView;
-    }
 }
