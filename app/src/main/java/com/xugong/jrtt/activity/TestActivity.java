@@ -7,15 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.xugong.jrtt.R;
 import com.xugong.jrtt.fragment.HomeFragment;
+import com.xugong.jrtt.fragment.sub.NewListFragment;
 
 public class TestActivity  extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        HomeFragment homeFragment=new HomeFragment();
+        NewListFragment fragment=new NewListFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content,homeFragment);
+        transaction.replace(R.id.content,fragment);
         transaction.commit();
     }
 }

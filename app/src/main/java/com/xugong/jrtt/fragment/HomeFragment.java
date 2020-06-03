@@ -43,38 +43,7 @@ public class HomeFragment extends BaseFragment {
     }
 
 
-    class MyNewTypeAdapter extends  FragmentPagerAdapter{
 
-        //集合可以让我们重用Fragment
-        private List<ResponseData.DataBean> datas=new ArrayList<>();
-        private List<Fragment> fragments=new ArrayList<>();
-
-        public MyNewTypeAdapter(FragmentManager fm,List<ResponseData.DataBean> list) {
-            super(fm);
-
-            datas.addAll(list);//将一个集合中所有的数据加到当前的datas
-
-            for(ResponseData.DataBean item:datas){
-                fragments.add(new Page1Fragment());
-            }
-        }
-
-        @Nullable
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return datas.get(position).title;//将标题返回
-        }
-
-        @Override
-        public Fragment getItem(int i) {
-            return fragments.get(i);
-        }
-
-        @Override
-        public int getCount() {
-            return datas.size();
-        }
-    }
     private void getData() {
         //1:retrofit
         Retrofit retrofit = new Retrofit.Builder()//创建器
@@ -106,5 +75,38 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
+    }
+
+    class MyNewTypeAdapter extends  FragmentPagerAdapter{
+
+        //集合可以让我们重用Fragment
+        private List<ResponseData.DataBean> datas=new ArrayList<>();
+        private List<Fragment> fragments=new ArrayList<>();
+
+        public MyNewTypeAdapter(FragmentManager fm,List<ResponseData.DataBean> list) {
+            super(fm);
+
+            datas.addAll(list);//将一个集合中所有的数据加到当前的datas
+
+            for(ResponseData.DataBean item:datas){
+                fragments.add(new Page1Fragment());
+            }
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return datas.get(position).title;//将标题返回
+        }
+
+        @Override
+        public Fragment getItem(int i) {
+            return fragments.get(i);
+        }
+
+        @Override
+        public int getCount() {
+            return datas.size();
+        }
     }
 }
