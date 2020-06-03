@@ -1,6 +1,7 @@
 package com.xugong.jrtt.fragment.sub;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +73,15 @@ public class NewListFragment extends BaseFragment {
         pullToRefreshListView.setAdapter(adapter);
     }
 
+    class ViewHolderOne{
+        public TextView title;
+        public TextView date;
+        public ImageView image;
+    }
+    class ViewHolderThree extends ViewHolderOne{
+        public ImageView image1;
+        public ImageView image2;
+    }
     //8:定义适配器
     class NewListAdapter extends BaseAdapter{
         private List<NewListData.DataBean.NewsBean> listData;
@@ -85,6 +95,24 @@ public class NewListFragment extends BaseFragment {
         }
 
         @Override
+        public int getViewTypeCount() {//两种视频，一种是一图，另一种是三图
+            return 2;
+        }
+
+        @Override
+        public int getItemViewType(int position) {//哪一个是三图的，哪一行是一图
+            NewListData.DataBean.NewsBean bean = listData.get(position);
+            if(bean.type==0){
+                //一图
+                return 0;//R.layout.item_new_one.xml
+            }else {
+                //三图
+                return 1;//R.layout.item_new_three.xml
+            }
+        }
+
+
+        @Override
         public Object getItem(int position) {
             return null;
         }
@@ -96,25 +124,89 @@ public class NewListFragment extends BaseFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            //行视图
-            NewListData.DataBean.NewsBean newsBean = listData.get(position); //每一条新闻是newsBean
 
-            //视图 R.layout.item_new_one
-            View view = View.inflate(getContext(),R.layout.item_new_one,null);
+            //A:获取数据
+            NewListData.DataBean.NewsBean bean = listData.get(position);
 
-            //赋值
-            TextView title=view.findViewById(R.id.item_title);
-            TextView date=view.findViewById(R.id.item_date);
-            ImageView image=view.findViewById(R.id.item_image);
+            //B:返回视图
+            //判断当前视图的类型是一图，还是三图
+            int type=getItemViewType(position);
+            if(type==0){
+                convertView = setDataToOneView(convertView, bean);
+                //C:赋值
+                return convertView;
+            }else{//1
+                //A:数据
+                //B:控件
+                convertView = setDataToThreeView(convertView,bean);
+                return convertView;
+            }
 
-            String imageUrl="http://192.168.88.101:8080/"+newsBean.listimage;
-            Glide.with(getContext()).load(imageUrl).into(image);
-            //设置缩放类型
-            image.setScaleType(ImageView.ScaleType.CENTER_CROP);//先按比例放大，再裁切
+        }
 
-            title.setText(newsBean.title);
-            date.setText(newsBean.pubdate);
-            return view;
+        //给三图赋值
+        @NonNull
+        private View setDataToThreeView(View converView,NewListData.DataBean.NewsBean bean) {
+
+            ViewHolderThree holderThree =null;
+            if(converView == null){
+                converView=View.inflate(getContext(),R.layout.item_new_three,null);
+
+                holderThree = new ViewHolderThree();
+                holderThree. title=converView.findViewById(R.id.item_title);
+                holderThree. date=converView.findViewById(R.id.item_date);
+                holderThree. image=converView.findViewById(R.id.item_image);
+                holderThree. image1=converView.findViewById(R.id.item_image1);
+                holderThree. image2=converView.findViewById(R.id.item_image2);
+                converView.setTag(holderThree);//将视图与holder绑定
+            }else{
+                holderThree= (ViewHolderThree) converView.getTag();
+            }
+
+
+            //C:赋值
+            holderThree.title.setText(bean.title);
+            holderThree.date.setText(bean.pubdate);
+
+            String url="http://192.168.88.101:8080/"+bean.listimage;
+            String url1="http://192.168.88.101:8080/"+bean.listimage1;
+            String url2="http://192.168.88.101:8080/"+bean.listimage2;
+            holderThree.image.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
+            holderThree.image1.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
+            holderThree.image2.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
+            Glide.with(getContext()).load(url).into(holderThree.image);
+            Glide.with(getContext()).load(url1).into(holderThree.image1);
+            Glide.with(getContext()).load(url2).into(holderThree.image2);
+            //D:convertView优化
+            return converView;
+        }
+
+        //给一图赋值
+        @NonNull
+        private View setDataToOneView(View convertView, NewListData.DataBean.NewsBean bean) {
+            ViewHolderOne holderOne=null;
+            //一图
+            if(convertView == null){//表示视图不是重用。
+                convertView = View.inflate(getContext(),R.layout.item_new_one,null);
+                // find,set..
+                holderOne=new ViewHolderOne();
+                holderOne. title=convertView.findViewById(R.id.item_title);
+                holderOne. date=convertView.findViewById(R.id.item_date);
+                holderOne. image=convertView.findViewById(R.id.item_image);
+                convertView.setTag(holderOne);//将视图与holder绑定在一起。
+            }else{
+                //重用， find,set..
+                // convertView!=null
+                holderOne= (ViewHolderOne) convertView.getTag();
+            }
+
+
+            holderOne.title.setText(bean.title);
+            holderOne.date.setText(bean.pubdate);
+            String url="http://192.168.88.101:8080/"+bean.listimage;
+            holderOne.image.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
+            Glide.with(getContext()).load(url).into(holderOne.image);
+            return convertView;
         }
 
     }
