@@ -1,5 +1,6 @@
 package com.xugong.jrtt.fragment.sub;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -107,6 +108,9 @@ public class NewListFragment extends BaseFragment {
                     List<NewInfo> newInfos = dao.queryForAll();
                     System.out.println(newInfos.toString());
 
+
+                    //9.6 调用getView刷新列表一行，如果需要刷新整个表，调adapter.notifyDataSetChanged()
+                    adapter.notifyDataSetChanged();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -176,25 +180,50 @@ public class NewListFragment extends BaseFragment {
             //A:获取数据
             NewListData.DataBean.NewsBean bean = listData.get(position);
 
+            //查询数据库是否存在id  true,false
+            boolean isExist= false;
+            try {
+                isExist = queryIdInDb(bean.id);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             //B:返回视图
             //判断当前视图的类型是一图，还是三图
             int type=getItemViewType(position);
             if(type==0){
-                convertView = setDataToOneView(convertView, bean);
+                convertView = setDataToOneView(convertView, bean,isExist);
                 //C:赋值
                 return convertView;
             }else{//1
                 //A:数据
                 //B:控件
-                convertView = setDataToThreeView(convertView,bean);
+                convertView = setDataToThreeView(convertView,bean,isExist);
                 return convertView;
             }
 
         }
 
+        //9.3 查询当前新闻是否存在数据库中
+        private MyDbHelper myDbHelper;
+        private Dao<NewInfo, Integer> dao;
+        private boolean queryIdInDb(int id) throws SQLException {
+            if(myDbHelper==null){
+                myDbHelper=new MyDbHelper(getContext());
+                dao = myDbHelper.getDao(NewInfo.class);
+            }
+
+            List<NewInfo> list = dao.queryForEq("newId", id);
+            if(list==null||list.size()==0){
+                return false;//表示不存在数据库中，就是没点过的新闻
+            }else{
+                return true;
+            }
+        }
+
         //给三图赋值
         @NonNull
-        private View setDataToThreeView(View converView,NewListData.DataBean.NewsBean bean) {
+        private View setDataToThreeView(View converView, NewListData.DataBean.NewsBean bean, boolean isExist) {
 
             ViewHolderThree holderThree =null;
             if(converView == null){
@@ -225,13 +254,19 @@ public class NewListFragment extends BaseFragment {
             Glide.with(getContext()).load(url).into(holderThree.image);
             Glide.with(getContext()).load(url1).into(holderThree.image1);
             Glide.with(getContext()).load(url2).into(holderThree.image2);
+
+
+            //9.5根据是否存在于数据库表， 来调整标题与日期的颜色
+            holderThree.title.setTextColor(isExist?Color.GRAY:Color.BLACK);
+            holderThree.date.setTextColor(isExist?Color.GRAY:Color.BLACK);
+
             //D:convertView优化
             return converView;
         }
 
         //给一图赋值
         @NonNull
-        private View setDataToOneView(View convertView, NewListData.DataBean.NewsBean bean) {
+        private View setDataToOneView(View convertView, NewListData.DataBean.NewsBean bean, boolean isExist) {
             ViewHolderOne holderOne=null;
             //一图
             if(convertView == null){//表示视图不是重用。
@@ -254,6 +289,10 @@ public class NewListFragment extends BaseFragment {
             String url="http://192.168.1.102:8080/"+bean.listimage;
             holderOne.image.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
             Glide.with(getContext()).load(url).into(holderOne.image);
+
+            //9.4根据是否存在于数据库表， 来调整标题与日期的颜色
+            holderOne.title.setTextColor(isExist ? Color.GRAY:Color.BLACK);
+            holderOne.date.setTextColor(isExist ? Color.GRAY:Color.BLACK);
             return convertView;
         }
 
