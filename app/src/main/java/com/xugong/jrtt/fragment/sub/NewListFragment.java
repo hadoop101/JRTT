@@ -14,11 +14,15 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.j256.ormlite.dao.Dao;
 import com.xugong.jrtt.R;
 import com.xugong.jrtt.bean.NewListData;
+import com.xugong.jrtt.db.MyDbHelper;
+import com.xugong.jrtt.db.NewInfo;
 import com.xugong.jrtt.fragment.BaseFragment;
 import com.xugong.jrtt.net.MyApi;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -90,6 +94,22 @@ public class NewListFragment extends BaseFragment {
                 NewListData.DataBean.NewsBean bean = adapter.getListData().get(position-1);
                 //Toast.makeText(getContext(), "id="+bean.id, Toast.LENGTH_SHORT).show();
                 //9.2使用数据库保存起来
+                MyDbHelper helper=new MyDbHelper(getContext());
+                try {
+                    //dao是有增删改查方法的对象
+                    Dao<NewInfo, Integer> dao = helper.getDao(NewInfo.class);
+                    //保存
+                    List<NewInfo> list =  dao.queryForEq("newId",bean.id);//select 语句
+                    if(list==null||list.size()==0){
+                        dao.create(new NewInfo(bean.id));//执行一条insert 语句
+                    }
+
+                    List<NewInfo> newInfos = dao.queryForAll();
+                    System.out.println(newInfos.toString());
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
