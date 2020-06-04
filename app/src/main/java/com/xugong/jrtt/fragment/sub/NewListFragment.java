@@ -5,9 +5,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
@@ -44,9 +46,9 @@ public class NewListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         System.out.println("onActivityCreated");
 
-        //http://192.168.88.101:8080/jrtt/10007/list_1.json
+        //http://192.168.1.102:8080/jrtt/10007/list_1.json
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.88.101:8080/jrtt/")
+                .baseUrl("http://192.168.1.102:8080/jrtt/")
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();
         //6:执行请求
@@ -65,12 +67,31 @@ public class NewListFragment extends BaseFragment {
         });//
     }
     //7：显示
+    private  NewListAdapter adapter;
     private void setDataToView(NewListData.DataBean data) {
         //7.1查找出控件
         PullToRefreshListView pullToRefreshListView = fragmentView.findViewById(R.id.pull_listview);
+        onlisteners(pullToRefreshListView);
         //7.2.赋值一个适配器
-        NewListAdapter adapter=new NewListAdapter(data.news);
+        adapter=new NewListAdapter(data.news);
         pullToRefreshListView.setAdapter(adapter);
+    }
+
+    //9:监听点击
+
+    private void onlisteners(PullToRefreshListView pullToRefreshListView) {
+        //9.1点击监听器
+        //ListView它的第一条数据的position是0，第二条是1
+        //pullToRefreshListView  0位置被刷新视图占用，所以第1条数据从1 position
+        pullToRefreshListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //int position当前点击的位置
+                NewListData.DataBean.NewsBean bean = adapter.getListData().get(position-1);
+                //Toast.makeText(getContext(), "id="+bean.id, Toast.LENGTH_SHORT).show();
+                //9.2使用数据库保存起来
+            }
+        });
     }
 
     class ViewHolderOne{
@@ -85,6 +106,13 @@ public class NewListFragment extends BaseFragment {
     //8:定义适配器
     class NewListAdapter extends BaseAdapter{
         private List<NewListData.DataBean.NewsBean> listData;
+
+        public List<NewListData.DataBean.NewsBean> getListData() {
+            return listData;
+        }
+
+
+
         //构造方法
         public NewListAdapter(List<NewListData.DataBean.NewsBean> list){
             listData=list;
@@ -168,9 +196,9 @@ public class NewListFragment extends BaseFragment {
             holderThree.title.setText(bean.title);
             holderThree.date.setText(bean.pubdate);
 
-            String url="http://192.168.88.101:8080/"+bean.listimage;
-            String url1="http://192.168.88.101:8080/"+bean.listimage1;
-            String url2="http://192.168.88.101:8080/"+bean.listimage2;
+            String url="http://192.168.1.102:8080/"+bean.listimage;
+            String url1="http://192.168.1.102:8080/"+bean.listimage1;
+            String url2="http://192.168.1.102:8080/"+bean.listimage2;
             holderThree.image.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
             holderThree.image1.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
             holderThree.image2.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
@@ -203,7 +231,7 @@ public class NewListFragment extends BaseFragment {
 
             holderOne.title.setText(bean.title);
             holderOne.date.setText(bean.pubdate);
-            String url="http://192.168.88.101:8080/"+bean.listimage;
+            String url="http://192.168.1.102:8080/"+bean.listimage;
             holderOne.image.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
             Glide.with(getContext()).load(url).into(holderOne.image);
             return convertView;
