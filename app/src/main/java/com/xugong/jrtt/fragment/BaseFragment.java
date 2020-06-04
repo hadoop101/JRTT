@@ -11,6 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
+
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 //1：定义成抽象类，必须继承该来使用
 public abstract class BaseFragment extends Fragment {
     //3:修改给子类使用的成员
@@ -43,4 +48,12 @@ public abstract class BaseFragment extends Fragment {
         return textView;
     }
 
+    protected Retrofit retrofit;
+    public BaseFragment() {
+        //http://192.168.1.102:8080/jrtt/10007/list_1.json
+    retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.102:8080/jrtt/")
+                .addConverterFactory(GsonConverterFactory.create(new Gson()))
+                .build();
+    }
 }

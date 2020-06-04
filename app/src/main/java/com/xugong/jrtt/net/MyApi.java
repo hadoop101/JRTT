@@ -1,10 +1,12 @@
 package com.xugong.jrtt.net;
 
+import com.xugong.jrtt.bean.MoreData;
 import com.xugong.jrtt.bean.NewListData;
 import com.xugong.jrtt.bean.ResponseData;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Url;
 
 //注解 与 方法
 public interface MyApi {
@@ -13,4 +15,10 @@ public interface MyApi {
 
     @GET("10007/list_1.json")
     public Call<NewListData> getNewList();
+
+
+    @GET
+    Call<MoreData>getMoreData(@Url String loadMoreUrl);//10007/list_2.json
+
+    //http://192.168.1.102:8080/jrtt/10007/list_2.json
 }

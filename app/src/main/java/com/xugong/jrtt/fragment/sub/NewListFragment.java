@@ -9,14 +9,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.j256.ormlite.dao.Dao;
 import com.xugong.jrtt.R;
+import com.xugong.jrtt.bean.MoreData;
 import com.xugong.jrtt.bean.NewListData;
 import com.xugong.jrtt.db.MyDbHelper;
 import com.xugong.jrtt.db.NewInfo;
@@ -34,6 +37,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 //1:继承BaseFragment
 public class NewListFragment extends BaseFragment {
+    //10.3 定义一个变量保存下一页的url地址
+    private String loadMoreUrl = null;
 
     //2:重写getMyView
     //3:布式列表
@@ -51,11 +56,7 @@ public class NewListFragment extends BaseFragment {
         super.onActivityCreated(savedInstanceState);
         System.out.println("onActivityCreated");
 
-        //http://192.168.1.102:8080/jrtt/10007/list_1.json
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.102:8080/jrtt/")
-                .addConverterFactory(GsonConverterFactory.create(new Gson()))
-                .build();
+
         //6:执行请求
         retrofit.create(MyApi.class).getNewList().enqueue(new Callback<NewListData>() {
             @Override
@@ -63,6 +64,8 @@ public class NewListFragment extends BaseFragment {
                 /*System.out.println(response.body().retcode);
                 System.out.println(response.body().data);*/
                 setDataToView(response.body().data);
+                //10.3保存下一页地址
+                loadMoreUrl=response.body().data.more;
             }
 
             @Override
@@ -73,13 +76,91 @@ public class NewListFragment extends BaseFragment {
     }
     //7：显示
     private  NewListAdapter adapter;
+    private PullToRefreshListView pullToRefreshListView;
+    //10:下拉刷新与滚动加载
     private void setDataToView(NewListData.DataBean data) {
         //7.1查找出控件
-        PullToRefreshListView pullToRefreshListView = fragmentView.findViewById(R.id.pull_listview);
-        onlisteners(pullToRefreshListView);
-        //7.2.赋值一个适配器
-        adapter=new NewListAdapter(data.news);
-        pullToRefreshListView.setAdapter(adapter);
+
+        //10.1 判断控件是否为空，为空才初始化
+
+        if(pullToRefreshListView == null){
+            pullToRefreshListView = fragmentView.findViewById(R.id.pull_listview);
+            onlisteners(pullToRefreshListView);
+            //10.2 给列表添加滚动与下拉刷新的监听器
+            onlistenerspull(pullToRefreshListView);
+            //7.2.赋值一个适配器
+            adapter=new NewListAdapter(data.news);
+            pullToRefreshListView.setAdapter(adapter);
+        }
+
+    }
+
+    private void onlistenerspull(PullToRefreshListView pullToRefreshListView) {
+        //10.3 设置模式为BOTH
+        pullToRefreshListView.setMode(PullToRefreshBase.Mode.BOTH);
+        pullToRefreshListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(final PullToRefreshBase<ListView> refreshView) {
+                //下拉
+               //请求服务端
+                retrofit.create(MyApi.class).getNewList().enqueue(new Callback<NewListData>() {
+                    @Override
+                    public void onResponse(Call<NewListData> call, Response<NewListData> response) {
+                        //10.3保存下一页地址
+                        loadMoreUrl=response.body().data.more;
+                        //请求成功
+                        //10.4:请求到服务端数据之后，先清空集合，再添加数据，再刷新列表，关闭等待
+                        if(adapter!=null){
+                            adapter.getListData().clear();//清空
+                            List<NewListData.DataBean.NewsBean> newsBeanList = response.body().data.news;
+                            adapter.getListData().addAll(newsBeanList);//添加数据，为什么使用addAll
+                            //多个元素要加入到当前集合使用addAll
+
+                            adapter.notifyDataSetChanged();//整体刷新
+
+                            refreshView.onRefreshComplete();//关闭等待视图
+                            Toast.makeText(getContext(), "下拉刷新成功", Toast.LENGTH_SHORT).show();
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<NewListData> call, Throwable t) {
+                        Toast.makeText(getContext(), "请求失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+
+            @Override
+            public void onPullUpToRefresh(final PullToRefreshBase<ListView> refreshView) {
+                //10.4 滚动加载需要使用loadMoreUrl地址取得下一页数据
+                Toast.makeText(getContext(), "滚动", Toast.LENGTH_SHORT).show();
+                //10.5 在MyApi中定义接口方法，定义url与解析的类型MoreData
+                retrofit.create(MyApi.class).getMoreData(loadMoreUrl).enqueue(new Callback<MoreData>() {
+                    @Override
+                    public void onResponse(Call<MoreData> call, Response<MoreData> response) {
+                        //1:不清空集合
+                        if(adapter!=null){
+                            //2:直接添加到当前集合
+                            adapter.getListData().addAll(response.body().data.news);
+                            //3:刷新列表，关闭等待
+                            adapter.notifyDataSetChanged();
+                            //4:关闭底部刷新
+                            refreshView.onRefreshComplete();
+
+                        }
+
+
+                        Toast.makeText(getContext(), "下拉刷新成功", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<MoreData> call, Throwable t) {
+                        Toast.makeText(getContext(), "请求失败", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
     }
 
     //9:监听点击
