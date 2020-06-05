@@ -51,8 +51,8 @@ public abstract class BaseFragment extends Fragment {
     protected Retrofit retrofit;
     public BaseFragment() {
         //http://192.168.1.102:8080/jrtt/10007/list_1.json
-    retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.102:8080/jrtt/")
+        retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.88.101:8080/jrtt/")
                 .addConverterFactory(GsonConverterFactory.create(new Gson()))
                 .build();
     }
