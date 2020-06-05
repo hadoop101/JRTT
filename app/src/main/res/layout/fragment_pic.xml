@@ -21,10 +21,14 @@ tools:context=".activity.SplashActivity">
     </RelativeLayout>
     <FrameLayout
         android:layout_width="match_parent"
+        android:background="#D4D4D4"
+        android:padding="10dp"
         android:layout_height="match_parent">
         <ListView
             android:id="@+id/listview"
-            android:background="#00427C"
+            android:background="#D4D4D4"
+            android:divider="#D4D4D4"
+            android:dividerHeight="10dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </ListView>
@@ -32,7 +36,9 @@ tools:context=".activity.SplashActivity">
             android:visibility="gone"
             android:id="@+id/gridview"
             android:numColumns="2"
-            android:background="#CDF966"
+            android:verticalSpacing="10dp"
+            android:horizontalSpacing="10dp"
+            android:background="#D4D4D4"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </GridView>
