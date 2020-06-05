@@ -2,6 +2,7 @@ package com.xugong.jrtt.net;
 
 import com.xugong.jrtt.bean.MoreData;
 import com.xugong.jrtt.bean.NewListData;
+import com.xugong.jrtt.bean.PicData;
 import com.xugong.jrtt.bean.ResponseData;
 
 import retrofit2.Call;
@@ -21,5 +22,7 @@ public interface MyApi {
     @GET
     Call<MoreData>getMoreData(@Url String loadMoreUrl);//10007/list_2.json
 
-    //http://192.168.1.102:8080/jrtt/10007/list_2.json
+    //http://192.168.1.102:8080/jrtt/
+    @GET("photos/photos_1.json")
+    Call<PicData> getPicData();
 }

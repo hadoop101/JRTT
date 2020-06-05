@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.xugong.jrtt.R;
 import com.xugong.jrtt.fragment.HomeFragment;
+import com.xugong.jrtt.fragment.PicFragment;
 import com.xugong.jrtt.fragment.sub.NewListFragment;
 
 public class TestActivity  extends AppCompatActivity {
@@ -15,7 +16,7 @@ public class TestActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         //NewListFragment fragment=new NewListFragment();
-        HomeFragment fragment=new HomeFragment();
+        PicFragment fragment=new PicFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content,fragment);
         transaction.commit();
