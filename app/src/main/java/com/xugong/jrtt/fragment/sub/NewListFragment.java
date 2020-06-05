@@ -1,5 +1,6 @@
 package com.xugong.jrtt.fragment.sub;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -36,9 +37,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 //1:继承BaseFragment
+@SuppressLint("ValidFragment")
 public class NewListFragment extends BaseFragment {
     //10.3 定义一个变量保存下一页的url地址
     private String loadMoreUrl = null;
+
+    private String loadFirstUrl = null;
+    //# 3. 列表使用传给你的地址去请求数据
+    public NewListFragment(String loadFirstUrl) {
+        this.loadFirstUrl = loadFirstUrl;
+    }
 
     //2:重写getMyView
     //3:布式列表
@@ -57,8 +65,9 @@ public class NewListFragment extends BaseFragment {
         System.out.println("onActivityCreated");
 
 
+        //# 4.要求获取列表首页的方法，必须根据我指定的地址去获取
         //6:执行请求
-        retrofit.create(MyApi.class).getNewList().enqueue(new Callback<NewListData>() {
+        retrofit.create(MyApi.class).getNewList(loadFirstUrl).enqueue(new Callback<NewListData>() {
             @Override
             public void onResponse(Call<NewListData> call, Response<NewListData> response) {
                 /*System.out.println(response.body().retcode);
@@ -103,7 +112,7 @@ public class NewListFragment extends BaseFragment {
             public void onPullDownToRefresh(final PullToRefreshBase<ListView> refreshView) {
                 //下拉
                //请求服务端
-                retrofit.create(MyApi.class).getNewList().enqueue(new Callback<NewListData>() {
+                retrofit.create(MyApi.class).getNewList(loadFirstUrl).enqueue(new Callback<NewListData>() {
                     @Override
                     public void onResponse(Call<NewListData> call, Response<NewListData> response) {
                         //10.3保存下一页地址
@@ -326,9 +335,9 @@ public class NewListFragment extends BaseFragment {
             holderThree.title.setText(bean.title);
             holderThree.date.setText(bean.pubdate);
 
-            String url="http://192.168.1.102:8080/"+bean.listimage;
-            String url1="http://192.168.1.102:8080/"+bean.listimage1;
-            String url2="http://192.168.1.102:8080/"+bean.listimage2;
+            String url=HOST+bean.listimage;
+            String url1=HOST+bean.listimage1;
+            String url2=HOST+bean.listimage2;
             holderThree.image.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
             holderThree.image1.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
             holderThree.image2.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
@@ -367,7 +376,7 @@ public class NewListFragment extends BaseFragment {
 
             holderOne.title.setText(bean.title);
             holderOne.date.setText(bean.pubdate);
-            String url="http://192.168.1.102:8080/"+bean.listimage;
+            String url=HOST+bean.listimage;
             holderOne.image.setScaleType(ImageView.ScaleType.CENTER_CROP);//放大裁切
             Glide.with(getContext()).load(url).into(holderOne.image);
 

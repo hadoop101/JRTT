@@ -13,10 +13,11 @@ public interface MyApi {
     @GET("home.json")
     public Call<ResponseData> getType();
 
-    @GET("10007/list_1.json")
-    public Call<NewListData> getNewList();
+//    @GET("10007/list_1.json")
+//    public Call<NewListData> getNewList();
 
-
+    @GET
+    public Call<NewListData> getNewList(@Url String loadFirstUrl);//"10007/list_1.json"
     @GET
     Call<MoreData>getMoreData(@Url String loadMoreUrl);//10007/list_2.json
 

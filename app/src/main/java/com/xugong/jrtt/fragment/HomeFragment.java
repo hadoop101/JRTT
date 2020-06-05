@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.xugong.jrtt.R;
 import com.xugong.jrtt.bean.ResponseData;
+import com.xugong.jrtt.fragment.sub.NewListFragment;
 import com.xugong.jrtt.fragment.sub.Page1Fragment;
 import com.xugong.jrtt.net.MyApi;
 
@@ -38,14 +39,14 @@ public class HomeFragment extends BaseFragment {
         View view=View.inflate(getActivity(), R.layout.fragment_home,null);
          viewPager=view.findViewById(R.id.viewpager);
          tablayout = view.findViewById(R.id.tablayout);
-         linstenChanged();
+        listenChanged();
         //4,适配器
         return view;
     }
 
     private MyNewTypeAdapter adapter;
-    //1，事件监听
-    private void linstenChanged() {
+    //#1，事件监听
+    private void listenChanged() {
         //1.1，添加页面监听器
         viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -118,8 +119,9 @@ public class HomeFragment extends BaseFragment {
 
             datas.addAll(list);//将一个集合中所有的数据加到当前的datas
 
+            //# 2.1 默认情况，页面是假的页面，现在换成新闻的列表。
             for(ResponseData.DataBean item:datas){
-                fragments.add(new Page1Fragment());
+                fragments.add(new NewListFragment(item.url));
             }
         }
 
