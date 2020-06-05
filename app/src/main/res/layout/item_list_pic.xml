@@ -14,7 +14,7 @@ tools:context=".activity.SplashActivity">
         android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:layout_width="match_parent"
-        android:layout_height="160dp" />
+        android:layout_height="200dp" />
 
     <TextView
         android:id="@+id/item_title"

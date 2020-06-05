@@ -101,6 +101,10 @@ public class PicFragment extends BaseFragment {
             // "listimage": "http://10.0.2.2:8080/jrtt/photos/images/46728356PMQ6.jpg",
             String url=item.listimage.replace("http://10.0.2.2:8080/",HOST);
             Glide.with(getContext()).load(url).into(imageView);
+
+            //3.4设置图片的缩放比例
+            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
         }
     }
 
@@ -108,7 +112,7 @@ public class PicFragment extends BaseFragment {
         //3:将数据设置给布局
         //3.1 布局条目录
 
-        //3.2 创建适配器，赋值给ListView，还赋值给gridView
+        //3.3 创建适配器，赋值给ListView，还赋值给gridView
         PicAdapter adapter = new PicAdapter(getContext(),R.layout.item_list_pic,news);
         listView.setAdapter(adapter);
         gridView.setAdapter(adapter);
