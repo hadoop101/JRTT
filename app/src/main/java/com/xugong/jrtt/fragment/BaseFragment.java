@@ -50,8 +50,8 @@ public abstract class BaseFragment extends Fragment {
 
     //# 5.地址
 
-    protected String HOST="http://192.168.88.101:8080/";
-    protected String BASEURL="http://192.168.88.101:8080/jrtt/";
+    public static String HOST="http://192.168.88.101:8080/";
+    public static  String BASEURL="http://192.168.88.101:8080/jrtt/";
     protected Retrofit retrofit;
     public BaseFragment() {
         //http://192.168.1.102:8080/jrtt/10007/list_1.json
