@@ -34,7 +34,7 @@ tools:context=".activity.SplashActivity">
                 style="@style/TitleBarBack"/>
             <ImageView
                 android:id="@+id/save"
-                android:src="@mipmap/icon_favorite"
+                android:src="@mipmap/b1y"
                 style="@style/TitleBarBack"/>
         </LinearLayout>
     </RelativeLayout>

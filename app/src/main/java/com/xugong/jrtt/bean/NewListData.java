@@ -1,5 +1,11 @@
 package com.xugong.jrtt.bean;
 
+import android.content.Intent;
+
+import com.j256.ormlite.field.DatabaseField;
+import com.j256.ormlite.table.DatabaseTable;
+
+import java.io.Serializable;
 import java.util.List;
 
 public class NewListData {
@@ -29,32 +35,49 @@ public class NewListData {
         public List<TopicBean> topic;
         public List<TopnewsBean> topnews;
 
-        public static class NewsBean {
-            /**
-             * comment : true
-             * commentlist : /jrtt/10007/comment_1.json
-             * commenturl : http://jrtt.qianlong.com/client/user/newComment/35319
-             * id : 35311
-             * listimage : /jrtt/10007/1.jpg
-             * pubdate : 2014-10-1113:18
-             * title : 网上大讲堂第368期预告：义务环保人人有责
-             * type : 0
-             * url : /jrtt/10007/724D6A55496A11726628.html
-             * listimage1 : /jrtt/10007/4.jpg
-             * listimage2 : /jrtt/10007/5.jpg
-             */
+        @DatabaseTable(tableName = "new_save_table")
+        public static class NewsBean implements Serializable {
 
+
+            @DatabaseField(columnName = "comment")
             public boolean comment;
+            @DatabaseField(columnName = "commentlist")
             public String commentlist;
+            @DatabaseField(columnName = "commenturl")
             public String commenturl;
-            public int id;
+            @DatabaseField(columnName = "id",id = true)
+            public Integer id;
+            @DatabaseField(columnName = "listimage")
             public String listimage;
+            @DatabaseField(columnName = "pubdate")
             public String pubdate;
+            @DatabaseField(columnName = "title")
             public String title;
+            @DatabaseField(columnName = "type")
             public int type;
+            @DatabaseField(columnName = "url")
             public String url;
+            @DatabaseField(columnName = "listimage1")
             public String listimage1;
+            @DatabaseField(columnName = "listimage2")
             public String listimage2;
+
+            @Override
+            public String toString() {
+                return "NewsBean{" +
+                        "comment=" + comment +
+                        ", commentlist='" + commentlist + '\'' +
+                        ", commenturl='" + commenturl + '\'' +
+                        ", id=" + id +
+                        ", listimage='" + listimage + '\'' +
+                        ", pubdate='" + pubdate + '\'' +
+                        ", title='" + title + '\'' +
+                        ", type=" + type +
+                        ", url='" + url + '\'' +
+                        ", listimage1='" + listimage1 + '\'' +
+                        ", listimage2='" + listimage2 + '\'' +
+                        '}';
+            }
         }
 
         public static class TopicBean {

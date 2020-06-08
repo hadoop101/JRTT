@@ -8,7 +8,7 @@ import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
-
+import com.xugong.jrtt.bean.NewListData;
 
 
 public class MyDbHelper  extends OrmLiteSqliteOpenHelper {
@@ -22,6 +22,8 @@ public class MyDbHelper  extends OrmLiteSqliteOpenHelper {
         //2:创建数据库中的表，保存已读新闻
         try{
             TableUtils.createTable(connectionSource,NewInfo.class);
+            //收藏
+            TableUtils.createTable(connectionSource,NewListData.DataBean.NewsBean.class);
         }catch (Exception e){
             e.printStackTrace();
         }

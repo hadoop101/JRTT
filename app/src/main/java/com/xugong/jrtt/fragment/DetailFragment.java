@@ -1,5 +1,6 @@
 package com.xugong.jrtt.fragment;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -15,7 +16,13 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.j256.ormlite.dao.Dao;
 import com.xugong.jrtt.R;
+import com.xugong.jrtt.bean.NewListData;
+import com.xugong.jrtt.db.MyDbHelper;
+
+import java.sql.SQLException;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,12 +46,26 @@ public class DetailFragment extends BaseFragment {
     WebView webview;
     Unbinder unbinder;
 
+
+    //6:定义成员变量与构造方法
+    private NewListData.DataBean.NewsBean bean;
+
+    public DetailFragment() {
+    }
+
+    @SuppressLint("ValidFragment")
+    public DetailFragment(NewListData.DataBean.NewsBean bean) {
+        System.out.println("详情页获取的数据:"+bean.title);
+        this.bean = bean;
+    }
+
     //...
     @Override
     protected View getMyView() {
         View view = View.inflate(getContext(), R.layout.fragment_detail, null);
         //find...
         //set
+        initDao();
         return view;
     }
 
@@ -55,12 +76,26 @@ public class DetailFragment extends BaseFragment {
 
         loadWebView();
 
+
+
     }
 
+    /*
+      "comment": true,
+                "commentlist": "/jrtt/10007/comment_1.json",
+                "commenturl": "http://jrtt.qianlong.com/client/user/newComment/35319",
+                "id": 35311,
+                "listimage": "/jrtt/10007/1.jpg",
+                "pubdate": "2014-10-1113:18",
+                "title": "网上大讲堂第368期预告：义务环保人人有责",
+                "type": 0,
+                "url": "/jrtt/10007/724D6A55496A11726628.html"
+     */
     private void loadWebView() {
         //webView发请求加载网页数据
-        webview.loadUrl(BASEURL+"/10007/724D6A55496A11726628.html");
-
+        //webview.loadUrl(BASEURL+"/10007/724D6A55496A11726628.html");
+        System.out.println("加载的网页内容为："+HOST+bean.url);
+        webview.loadUrl(HOST+bean.url);
         //设置Client 一个防止浏览器app自动弹出，
         webview.setWebViewClient(new WebViewClient());
         webview.setWebChromeClient(new MyWebChromeClient());//另一个是可以获取加载进度
@@ -116,8 +151,56 @@ public class DetailFragment extends BaseFragment {
             case R.id.share:
                 break;
             case R.id.save:
+                onSaveClick();
                 break;
         }
+    }
+
+    //#收藏 2
+    private  Dao<NewListData.DataBean.NewsBean, Integer> dao;
+    private void initDao() {
+        MyDbHelper helper=new MyDbHelper(getContext());
+        try {
+            dao = helper.getDao(NewListData.DataBean.NewsBean.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    //#收藏 1
+    private boolean isSaved = false;
+    private void onSaveClick()  {
+        if(isSaved){
+            isSaved = false;//取消收藏
+            //src =
+            save.setImageResource(R.mipmap.b1y);
+            Toast.makeText(getContext(), "取消收藏 ", Toast.LENGTH_SHORT).show();
+
+            try {
+                dao.deleteById(bean.id);
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }else{
+            isSaved = true;//收藏功能
+            save.setImageResource(R.mipmap.b1z);
+            Toast.makeText(getContext(), "收藏成功 ", Toast.LENGTH_SHORT).show();
+            try {
+                dao.create(bean);//保存到数据库
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            List<NewListData.DataBean.NewsBean> list = dao.queryForAll();
+            for(NewListData.DataBean.NewsBean item:list){
+                System.out.println(item);
+            }
+            System.out.println("遍历结束");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private String[] levels={"小","中","大","超大"};

@@ -17,7 +17,7 @@ public class TestActivity  extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         //NewListFragment fragment=new NewListFragment();
-        DetailFragment fragment=new DetailFragment();
+        HomeFragment fragment=new HomeFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content,fragment);
         transaction.commit();

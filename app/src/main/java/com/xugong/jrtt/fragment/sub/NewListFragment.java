@@ -1,6 +1,7 @@
 package com.xugong.jrtt.fragment.sub;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,6 +21,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.j256.ormlite.dao.Dao;
 import com.xugong.jrtt.R;
+import com.xugong.jrtt.activity.DetailActivity;
 import com.xugong.jrtt.bean.MoreData;
 import com.xugong.jrtt.bean.NewListData;
 import com.xugong.jrtt.db.MyDbHelper;
@@ -183,6 +185,10 @@ public class NewListFragment extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //int position当前点击的位置
                 NewListData.DataBean.NewsBean bean = adapter.getListData().get(position-1);
+
+                //列表页面跳到详情页面
+                goToNewDetailPage(bean);
+
                 //Toast.makeText(getContext(), "id="+bean.id, Toast.LENGTH_SHORT).show();
                 //9.2使用数据库保存起来
                 MyDbHelper helper=new MyDbHelper(getContext());
@@ -206,6 +212,17 @@ public class NewListFragment extends BaseFragment {
                 }
             }
         });
+    }
+
+    //
+    private void goToNewDetailPage(NewListData.DataBean.NewsBean bean) {
+            //1:打开页面
+        Intent intent=new Intent(getContext(),DetailActivity.class);//参1，当前页面 参2目标页面
+        intent.putExtra("bean",bean);//需要对象的类实现序列化
+        // public static class NewsBean implements Serializable
+            //2:传递参数
+        getActivity().startActivity(intent);
+            //3:收藏
     }
 
     class ViewHolderOne{

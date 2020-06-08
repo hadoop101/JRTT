@@ -25,7 +25,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <!--打开-->
+        <activity android:name=".activity.DetailActivity" >
 
+        </activity>
     </application>
 
 </manifest>
