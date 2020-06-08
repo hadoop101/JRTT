@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".activity.SplashActivity">
+    <!--标题-->
+    <RelativeLayout
+        android:id="@+id/titlebar"
+        style="@style/TitleBar">
+        <!--左-->
+        <ImageView
+            android:id="@+id/back"
+            style="@style/TitleBarBack"
+            android:layout_centerVertical="true"/>
+        <!--中-->
+        <TextView
+            style="@style/TitleBarText"
+            android:text="详情"
+            android:layout_centerInParent="true"/>
+        <!--右-->
+        <LinearLayout
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            style="@style/TitleBarLL">
+            <ImageView
+                android:id="@+id/font"
+                android:src="@mipmap/icon_textsize"
+                style="@style/TitleBarBack"/>
+            <ImageView
+                android:id="@+id/share"
+                android:src="@mipmap/speak"
+                style="@style/TitleBarBack"/>
+            <ImageView
+                android:id="@+id/save"
+                android:src="@mipmap/icon_favorite"
+                style="@style/TitleBarBack"/>
+        </LinearLayout>
+    </RelativeLayout>
+    <!--内容-->
+    <ProgressBar
+        android:id="@+id/progress"
+        style="@style/progress"/>
+    <WebView
+        android:id="@+id/webview"
+        style="@style/webview"></WebView>
+</LinearLayout>
