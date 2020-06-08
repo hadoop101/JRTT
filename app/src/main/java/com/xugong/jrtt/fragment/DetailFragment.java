@@ -76,21 +76,28 @@ public class DetailFragment extends BaseFragment {
 
         loadWebView();
 
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //查询当前新闻是否存在，如果存在 显示已收藏  否则显示未收藏
+        try {
+            NewListData.DataBean.NewsBean newBean= dao.queryForId(bean.id);
+            if(newBean==null){
+                isSaved=false;
+                save.setImageResource(R.mipmap.b1y);
+            }else{
+                isSaved=true;
+                save.setImageResource(R.mipmap.b1z);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    /*
-      "comment": true,
-                "commentlist": "/jrtt/10007/comment_1.json",
-                "commenturl": "http://jrtt.qianlong.com/client/user/newComment/35319",
-                "id": 35311,
-                "listimage": "/jrtt/10007/1.jpg",
-                "pubdate": "2014-10-1113:18",
-                "title": "网上大讲堂第368期预告：义务环保人人有责",
-                "type": 0,
-                "url": "/jrtt/10007/724D6A55496A11726628.html"
-     */
     private void loadWebView() {
         //webView发请求加载网页数据
         //webview.loadUrl(BASEURL+"/10007/724D6A55496A11726628.html");
