@@ -13,13 +13,13 @@ public class DetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
-        //4:通过get获取数据对象
+      /*  //4:通过get获取数据对象
         NewListData.DataBean.NewsBean bean= (NewListData.DataBean.NewsBean) getIntent().getSerializableExtra("bean");
         //NewListFragment fragment=new NewListFragment();
         //5:new后面跟着一个有参构造方法
         DetailFragment fragment=new DetailFragment(bean);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.content,fragment);
-        transaction.commit();
+        transaction.commit();*/
     }
 }
