@@ -1,1 +1,1 @@
-include ':app', ':test01adapter', ':test02parent', ':pull', ':test03test'
+include ':app', ':test01adapter', ':test02parent', ':pull', ':test03test', ':test04video'
