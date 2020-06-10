@@ -9,6 +9,9 @@ import com.volokh.danylo.video_player_manager.manager.VideoPlayerManager;
 
 import java.util.List;
 
+/*
+当前这个适配器是给视频使用的适配器
+ */
 public class VideoListViewAdapter extends BaseAdapter {
 
     private final VideoPlayerManager mVideoPlayerManager;
