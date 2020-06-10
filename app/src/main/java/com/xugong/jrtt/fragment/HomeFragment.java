@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 import com.xugong.jrtt.R;
 import com.xugong.jrtt.bean.ResponseData;
 import com.xugong.jrtt.fragment.sub.NewListFragment;
@@ -34,6 +36,8 @@ public class HomeFragment extends BaseFragment {
     private ViewPager viewPager;
     private TabLayout tablayout;
     public View getMyView() {
+        Logger.addLogAdapter(new AndroidLogAdapter());
+        Logger.d("HomeFragment getMyView");
         //1,布局ViewPager
         //2,加载
         View view=View.inflate(getActivity(), R.layout.fragment_home,null);
@@ -81,8 +85,8 @@ public class HomeFragment extends BaseFragment {
             public void onResponse(Call<ResponseData> call, Response<ResponseData> response) {
                 //处理获取数据成功
                 ResponseData data = response.body();
-                System.out.println(data.data);
-                System.out.println(data.retcode);
+                Logger.d("HomeFragment:onResponse:"+data.data);
+                Logger.d(data.retcode+"");
 
                 //----------------
                 adapter=new MyNewTypeAdapter(getFragmentManager(),data.data);
