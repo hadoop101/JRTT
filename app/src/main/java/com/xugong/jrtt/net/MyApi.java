@@ -4,7 +4,9 @@ import com.xugong.jrtt.bean.MoreData;
 import com.xugong.jrtt.bean.NewListData;
 import com.xugong.jrtt.bean.PicData;
 import com.xugong.jrtt.bean.ResponseData;
+import com.xugong.jrtt.bean.VideoData;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Url;
@@ -25,4 +27,7 @@ public interface MyApi {
     //http://192.168.1.102:8080/jrtt/
     @GET("photos/photos_1.json")
     Call<PicData> getPicData();
+
+    @GET("video.json")
+    Call<VideoData> getVideoData();
 }
