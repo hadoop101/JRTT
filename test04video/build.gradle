@@ -37,4 +37,7 @@ dependencies {
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
+    //1:依赖 第三方视频库
+    implementation 'com.github.danylovolokh:video-player-manager:0.2.0'
+
 }
